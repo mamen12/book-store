@@ -16,9 +16,10 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itasoft.bookstore.beans.Request;
 import com.itasoft.bookstore.entity.PayloadProperties;
 import com.itasoft.bookstore.repo.PayloadRepository;
 import com.itasoft.bookstore.util.JwtService;
@@ -74,13 +75,15 @@ public class HttpLoggingFilter  extends OncePerRequestFilter {
 	
 	@Async
 	private void logReqRes(String request, String response, String uri, String username, int statusCode) throws JsonMappingException, JsonProcessingException {
-		JsonNode node = new ObjectMapper().readTree(request);
+		ObjectMapper mapper = new ObjectMapper();
+		TypeReference<Request<?>> type = new TypeReference<Request<?>>() {};
+		Request<?> res = mapper.reader().forType(type).readValue(request);
 		PayloadProperties payload = new PayloadProperties().builder()
 				.idPayload(UUID.randomUUID().toString())
-				.idRequest(node.get("request_header").get("request_id").asText())
+				.idRequest(res.getRequestHeader().getRequestId())
 				.payloadRequest(request)
 				.payloadResponse(response)
-				.username(StringUtils.isEmpty(username) ? node.get("request_payload").get("username").asText() : username)
+				.username(StringUtils.isEmpty(username) ? "" : username)
 				.url(uri)
 				.timeCreated(new Date())
 				.build();

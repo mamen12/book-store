@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.itasoft.bookstore.beans.UserRequest;
 import com.itasoft.bookstore.beans.UserResponse;
-import com.itasoft.bookstore.controller.UserController;
 import com.itasoft.bookstore.entity.UserInfo;
 import com.itasoft.bookstore.repo.UserRepository;
 import com.itasoft.bookstore.service.IUserService;
