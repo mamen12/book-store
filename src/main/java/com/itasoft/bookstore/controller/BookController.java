@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +17,7 @@ import com.itasoft.bookstore.service.IBookService;
 
 
 
+
 @RestController
 @RequestMapping("/api")
 public class BookController {
@@ -27,12 +27,11 @@ public class BookController {
 	
 	
 	@RequestMapping(path = "/book", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public Response<String> bookSaveAndUpdate(@RequestBody Request<BookDTO> rq){
-		Response<String> resp = new Response<>();
+	public Response<Object> bookSaveAndUpdate(@RequestBody Request<BookDTO> rq){
+		Response<Object> resp = new Response<>();
 		String data = bookService.saveAndUpdateBook(rq.getRequestPayload());
 		if (ApiResponse.SUCCESS.getCode().equals(data)) {
 			resp.setStatusResponse(ApiResponse.valueOf(data));
-			resp.setData(data);
 		}else {
 			resp.setStatusResponse(ApiResponse.valueOf(data));
 		}
@@ -53,4 +52,17 @@ public class BookController {
 		
 		return resp;
 	}
+	
+	@RequestMapping(path = "/book/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public Response<Object> bookDelete(@RequestBody Request<BookDTO> rq){
+		Response<Object> resp = new Response<>();
+		String data = bookService.saveAndUpdateBook(rq.getRequestPayload());
+		if (ApiResponse.SUCCESS.getCode().equals(data)) {
+			resp.setStatusResponse(ApiResponse.valueOf(data));
+		}else {
+			resp.setStatusResponse(ApiResponse.valueOf(data));
+		}
+		
+		return resp;
+	}	
 }

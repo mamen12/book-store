@@ -43,6 +43,7 @@ public class BookServiceImpl implements IBookService {
 						.price(dto.getPrice())
 						.updatedAt(new Date())
 						.createdAt(book.getCreatedAt())
+						.isDel(0)
 						.build();
 				
 				bookRepo.save(bookUpdate);
@@ -88,15 +89,45 @@ public class BookServiceImpl implements IBookService {
 	}
 
 	@Override
-	public String deleteBook(BookDTO book) {
-		// TODO Auto-generated method stub
-		return null;
+	public String deleteBook(BookDTO dto) {
+		String rs = "";
+		try {
+			Book book = bookRepo.findById(dto.getId()).orElseThrow();
+			if (!ObjectUtils.isEmpty(book)) {
+				bookRepo.deleteBook(1, dto.getId());
+				rs =  "SUCCESS";
+			}else {
+				rs =  "FAILED";
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rs = "DATA_NOT_FOUND";
+		}
+		return rs;
 	}
 
 	@Override
-	public String updateQtyBook(BookDTO book) {
-		// TODO Auto-generated method stub
-		return null;
+	public String updateQtyBook(BookDTO dto) {
+		String rs = null;
+		try {
+			Book check = bookRepo.findById(dto.getId()).orElseThrow();
+			Book book = Book.builder()
+					.idBook(check.getIdBook())
+					.qty(check.getQty() - dto.getQty())
+					.author(check.getAuthor())
+					.name(check.getName())
+					.price(check.getPrice())
+					.updatedAt(new Date())
+					.createdAt(check.getCreatedAt())
+					.isDel(0)
+					.build();
+			
+			bookRepo.save(book);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rs = "gagal";
+		}
+		return rs;
 	}
 	
 	
